@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "988452585960",
+    "project_id": "beesmart-de79c",
+    "storage_bucket": "beesmart-de79c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:988452585960:android:2b0b8c0f2d48be409e645d",
+        "android_client_info": {
+          "package_name": "com.example.cwt_ecommerce_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "988452585960-cd4bujionsnp0cg7q7ndq6rd99fed7tn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJKG0sjIUjjBDj2ErZwPrHaNzQMoTEqCw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "988452585960-cd4bujionsnp0cg7q7ndq6rd99fed7tn.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "988452585960-4aoudbdamhvamd6e30us3i9vbni42olu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.cwtEcommerceApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:988452585960:android:3f9177071f65ab9c9e645d",
+        "android_client_info": {
+          "package_name": "com.rabeb.beesmart"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "988452585960-cd4bujionsnp0cg7q7ndq6rd99fed7tn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJKG0sjIUjjBDj2ErZwPrHaNzQMoTEqCw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "988452585960-cd4bujionsnp0cg7q7ndq6rd99fed7tn.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "988452585960-4aoudbdamhvamd6e30us3i9vbni42olu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.cwtEcommerceApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
