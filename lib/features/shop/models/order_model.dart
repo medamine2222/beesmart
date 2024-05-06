@@ -15,6 +15,7 @@ class OrderModel {
   final AddressModel? address;
   final DateTime? deliveryDate;
   final List<CartItemModel> items;
+  final List<String> deliveryStatus;
 
   OrderModel({
     required this.id,
@@ -26,7 +27,8 @@ class OrderModel {
     this.paymentMethod = 'Paypal',
     this.address,
     this.deliveryDate,
-  });
+    List<String>? deliveryStatus,
+  }) : deliveryStatus = deliveryStatus ?? [];
 
   String get formattedOrderDate => THelperFunctions.getFormattedDate(orderDate);
 
@@ -35,8 +37,8 @@ class OrderModel {
   String get orderStatusText => status == OrderStatus.delivered
       ? 'Delivered'
       : status == OrderStatus.shipped
-          ? 'Shipment on the way'
-          : 'Processing';
+      ? 'Shipment on the way'
+      : 'Processing';
 
   Map<String, dynamic> toJson() {
     return {
@@ -49,6 +51,7 @@ class OrderModel {
       'address': address?.toJson(), // Convert AddressModel to map
       'deliveryDate': deliveryDate,
       'items': items.map((item) => item.toJson()).toList(), // Convert CartItemModel to map
+      'deliveryStatus': deliveryStatus,
     };
   }
 
@@ -65,6 +68,7 @@ class OrderModel {
       address: AddressModel.fromMap(data['address'] as Map<String, dynamic>),
       deliveryDate: data['deliveryDate'] == null ? null : (data['deliveryDate'] as Timestamp).toDate(),
       items: (data['items'] as List<dynamic>).map((itemData) => CartItemModel.fromJson(itemData as Map<String, dynamic>)).toList(),
+      deliveryStatus: data['deliveryStatus'] != null ? List<String>.from(data['deliveryStatus']) : [],
     );
   }
 }

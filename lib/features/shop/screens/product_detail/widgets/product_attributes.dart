@@ -93,31 +93,28 @@ class TProductAttributes extends StatelessWidget {
                         TSectionHeading(title: attribute.name ?? '', showActionButton: false),
                         const SizedBox(height: TSizes.spaceBtwItems / 2),
                         Obx(
-                          () => Wrap(
+                              () => Wrap(
                             spacing: 8,
                             runSpacing: 8,
                             children: attribute.values!.map((attributeValue) {
-                              // attributeValue = Single Attribute Value [Green]
                               final isSelected = controller.selectedAttributes[attribute.name] == attributeValue;
-                              final available = controller
-                                  .getAttributesAvailabilityInVariation(product.productVariations!, attribute.name!)
-                                  .contains(attributeValue);
+                              final available = true;
 
-                              /// Attribute Chip
                               return TChoiceChip(
                                 text: attributeValue,
                                 selected: isSelected,
                                 onSelected: available
                                     ? (selected) {
-                                        if (selected && available) {
-                                          controller.onAttributeSelected(product, attribute.name ?? '', attributeValue);
-                                        }
-                                      }
+                                  if (selected) {
+                                    controller.onAttributeSelected(product, attribute.name ?? '', attributeValue);
+                                  }
+                                }
                                     : null,
                               );
                             }).toList(),
                           ),
                         ),
+
                         const SizedBox(height: TSizes.spaceBtwItems),
                       ],
                     ))

@@ -42,7 +42,7 @@ class THeaderCategories extends StatelessWidget {
                 /// Data Found
                 // Display a horizontal list of featured categories with images and text
                 return SizedBox(
-                  height: 80,
+                  height: 85,
                   child: ListView.builder(
                     shrinkWrap: true,
                     itemCount: categoryController.featuredCategories.length,

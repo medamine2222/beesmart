@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cwt_ecommerce_app/data/repositories/brands/brand_repository.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -17,6 +18,7 @@ class ProductRepository extends GetxController {
 
   /// Firestore instance for database interactions.
   final _db = FirebaseFirestore.instance;
+  final _storage = FirebaseStorage.instance;
 
   /* ---------------------------- FUNCTIONS ---------------------------------*/
 
@@ -241,4 +243,77 @@ class ProductRepository extends GetxController {
       throw e.toString();
     }
   }
+
+
+  Future<void> addProduct(ProductModel product) async {
+    try {
+      // Convert the product object to JSON format
+      final Map<String, dynamic> productData = product.toJson();
+
+      // Add the product data to the Firestore collection 'Products'
+      await _db.collection('Products').add(productData);
+
+      // If successful, no exceptions will be thrown
+    } on FirebaseException catch (e) {
+      // Handle Firebase exceptions
+      throw TFirebaseException(e.code).message;
+    } on PlatformException catch (e) {
+      // Handle platform exceptions
+      throw TPlatformException(e.code).message;
+    } catch (e) {
+      print(e);
+      // Handle other exceptions
+      throw 'Something went wrong. Please try again';
+    }
+  }
+
+  Future<String> uploadImageToStorage(String folderName, File imageFile, String imageName) async {
+    try {
+      final storageRef = _storage.ref().child(folderName).child(imageName);
+
+      // Upload file to Firebase Storage
+      final uploadTask = storageRef.putFile(imageFile);
+
+      // Get download URL from the uploaded file
+      final TaskSnapshot snapshot = await uploadTask;
+      final String downloadUrl = await snapshot.ref.getDownloadURL();
+
+      return downloadUrl;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+  /// Get products for a specific user ID.
+  Future<List<ProductModel>> getProductsForUser(String userId) async {
+    try {
+      final snapshot = await _db.collection('Products').where('UserId', isEqualTo: userId).get();
+      return snapshot.docs.map((querySnapshot) => ProductModel.fromSnapshot(querySnapshot)).toList();
+    } on FirebaseException catch (e) {
+      throw TFirebaseException(e.code).message;
+    } on PlatformException catch (e) {
+      throw TPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Something went wrong. Please try again';
+    }
+  }
+
+  Future<ProductModel?> getProductByUid(String productId) async {
+    try {
+      final snapshot = await _db.collection('Products').doc(productId).get();
+      if (snapshot.exists) {
+        return ProductModel.fromSnapshot(snapshot);
+      } else {
+        return null; // Product not found
+      }
+    } on FirebaseException catch (e) {
+      throw TFirebaseException(e.code).message;
+    } on PlatformException catch (e) {
+      throw TPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Something went wrong. Please try again';
+    }
+  }
+
 }
+
+

@@ -21,6 +21,9 @@ class OrderRepository extends GetxController {
       // Sub Collection Order -> Replaced with main Collection
       // final result = await _db.collection('Users').doc(userId).collection('Orders').get();
       final result = await _db.collection('Orders').where('userId', isEqualTo: userId).get();
+      print("result");
+      print(result);
+      print(result.size);
       return result.docs.map((documentSnapshot) => OrderModel.fromSnapshot(documentSnapshot)).toList();
     } catch (e) {
       throw 'Something went wrong while fetching Order Information. Try again later';

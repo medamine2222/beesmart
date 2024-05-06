@@ -1,3 +1,6 @@
+import 'package:cwt_ecommerce_app/features/personalization/models/user_model.dart';
+import 'package:cwt_ecommerce_app/features/shop/controllers/product/product_details_controller.dart';
+import 'package:cwt_ecommerce_app/features/shop/screens/users/user_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -22,6 +25,12 @@ class ProductDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ProductDetailController controller =
+        Get.put(ProductDetailController());
+    controller.init(product);
+    print("ProductDetailScreen");
+    print(product.userId);
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -29,10 +38,19 @@ class ProductDetailScreen extends StatelessWidget {
           children: [
             /// 1 - Product Image Slider
             TProductImageSlider(product: product),
-
-            /// 2 - Product Details
+            Obx(
+              () {
+                final user = controller.user.value;
+                return TUserInfo(
+                  user: user.user,
+                );
+                            },
+            ),
             Container(
-              padding: const EdgeInsets.only(right: TSizes.defaultSpace, left: TSizes.defaultSpace, bottom: TSizes.defaultSpace),
+              padding: const EdgeInsets.only(
+                  right: TSizes.defaultSpace,
+                  left: TSizes.defaultSpace,
+                  bottom: TSizes.defaultSpace),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -45,18 +63,23 @@ class ProductDetailScreen extends StatelessWidget {
 
                   /// -- Attributes
                   // If Product has no variations do not show attributes as well.
-                  if (product.productVariations != null && product.productVariations!.isNotEmpty) TProductAttributes(product: product),
-                  if (product.productVariations != null && product.productVariations!.isNotEmpty) const SizedBox(height: TSizes.spaceBtwSections),
+                  TProductAttributes(product: product),
+                  if (product.productVariations != null &&
+                      product.productVariations!.isNotEmpty)
+                    const SizedBox(height: TSizes.spaceBtwSections),
 
                   /// -- Checkout Button
                   SizedBox(
                     width: TDeviceUtils.getScreenWidth(context),
-                    child: ElevatedButton(child: const Text('Checkout'), onPressed: () => Get.to(() => const CheckoutScreen())),
+                    child: ElevatedButton(
+                        child: const Text('Checkout'),
+                        onPressed: () => Get.to(() => const CheckoutScreen())),
                   ),
                   const SizedBox(height: TSizes.spaceBtwSections),
 
                   /// - Description
-                  const TSectionHeading(title: 'Description', showActionButton: false),
+                  const TSectionHeading(
+                      title: 'Description', showActionButton: false),
                   const SizedBox(height: TSizes.spaceBtwItems),
                   // Read more package
                   ReadMoreText(
@@ -66,24 +89,34 @@ class ProductDetailScreen extends StatelessWidget {
                     trimMode: TrimMode.Line,
                     trimCollapsedText: ' Show more',
                     trimExpandedText: ' Less',
-                    moreStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800),
-                    lessStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800),
+                    moreStyle: const TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.w800),
+                    lessStyle: const TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.w800),
                   ),
                   const SizedBox(height: TSizes.spaceBtwSections),
 
                   /// - Reviews
                   const Divider(),
                   const SizedBox(height: TSizes.spaceBtwItems),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const TSectionHeading(title: 'Reviews (199)', showActionButton: false),
-                      IconButton(
-                        icon: const Icon(Iconsax.arrow_right_3, size: 18),
-                        onPressed: () => Get.to(() => const ProductReviewsScreen(), fullscreenDialog: true),
-                      )
-                    ],
-                  ),
+                  Obx(() => Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TSectionHeading(
+                            title:
+                                'Reviews (${(controller.user.value.reviews.length).toString()})',
+                            showActionButton: false,
+                          ),
+                          IconButton(
+                            icon: const Icon(Iconsax.arrow_right_3, size: 18),
+                            onPressed: () => Get.to(
+                                () => ProductReviewsScreen(
+                                      reviews: controller.user.value.reviews,
+                                    ),
+                                fullscreenDialog: true),
+                          )
+                        ],
+                      )),
                 ],
               ),
             ),
@@ -91,6 +124,54 @@ class ProductDetailScreen extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: TBottomAddToCart(product: product),
+    );
+  }
+}
+
+class TUserInfo extends StatelessWidget {
+  final UserModel user;
+
+  const TUserInfo({
+    Key? key,
+    required this.user,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 24.0),
+      child: InkWell(
+        onTap: () {
+          Get.to(() => UserProfileScreen(user: user));
+        },
+        child: Column(
+          children: [
+            Row(
+              children: [
+                // User image or initials
+                CircleAvatar(
+                  radius: 25,
+                  backgroundImage: user.profilePicture.isNotEmpty
+                      ? NetworkImage(user.profilePicture)
+                      : null,
+                  child: user.profilePicture.isNotEmpty
+                      ? null
+                      : Text(
+                          '${user.firstName.isNotEmpty ? user.firstName[0] : ""}${user.lastName.isNotEmpty ? user.lastName[0] : ""}',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                ),
+                SizedBox(width: 10),
+                // Full name
+                Text(
+                  '${user.firstName.isNotEmpty ? user.firstName : "Unknown"} ${user.lastName.isNotEmpty ? user.lastName : ""}',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

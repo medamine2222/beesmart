@@ -12,7 +12,8 @@ class CartController extends GetxController {
 
   RxInt noOfCartItems = 0.obs;
   RxDouble totalCartPrice = 0.0.obs;
-  RxInt productQuantityInCart = 0.obs;
+  RxInt productQuantityInCart = 1.obs;
+
   RxList<CartItemModel> cartItems = <CartItemModel>[].obs;
   final variationController = VariationController.instance;
 
@@ -48,12 +49,6 @@ class CartController extends GetxController {
   }
 
   void addToCart(ProductModel product) {
-    // Quantity Check
-    if (productQuantityInCart.value < 1) {
-      TLoaders.customToast(message: 'Select Quantity');
-      return;
-    }
-
     // Variation Selected?
     if (product.productType == ProductType.variable.toString() && variationController.selectedVariation.value.id.isEmpty) {
       TLoaders.customToast(message: 'Select Variation');
@@ -74,7 +69,7 @@ class CartController extends GetxController {
     }
 
     // Convert the ProductModel to a CartItemModel with the given quantity
-    final selectedCartItem = convertToCartItem(product, productQuantityInCart.value);
+    final selectedCartItem = convertToCartItem(product, 1);
 
     // Check if already added in the Cart
     int index = cartItems
@@ -176,7 +171,7 @@ class CartController extends GetxController {
       if (variationId.isNotEmpty) {
         productQuantityInCart.value = getVariationQuantityInCart(product.id, variationId);
       } else {
-        productQuantityInCart.value = 0;
+        productQuantityInCart.value = 1;
       }
     }
   }
@@ -197,7 +192,7 @@ class CartController extends GetxController {
   }
 
   void clearCart() {
-    productQuantityInCart.value = 0;
+    productQuantityInCart.value = 1;
     cartItems.clear();
     updateCart();
   }

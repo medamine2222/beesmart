@@ -31,32 +31,6 @@ class TProductMetaData extends StatelessWidget {
         Row(
           children: [
             /// -- Sale Tag
-            if (salePercentage != null)
-              Row(
-                children: [
-                  TRoundedContainer(
-                    backgroundColor: TColors.secondary,
-                    radius: TSizes.sm,
-                    padding: const EdgeInsets.symmetric(horizontal: TSizes.sm, vertical: TSizes.xs),
-                    child: Text('$salePercentage%',
-                        style: Theme.of(context).textTheme.labelLarge!.apply(color: TColors.black)),
-                  ),
-                  const SizedBox(width: TSizes.spaceBtwItems)
-                ],
-              ),
-
-
-            // Actual Price if sale price not null.
-            if ((product.productVariations == null || product.productVariations!.isEmpty) && product.salePrice> 0.0)
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(product.price.toString(), style: Theme.of(context).textTheme.titleSmall!.apply(decoration: TextDecoration.lineThrough),),
-                  const SizedBox(width: TSizes.spaceBtwItems)
-                ],
-              ),
-
-            // Price, Show sale price as main price if sale exist.
             TProductPriceText(price: controller.getProductPrice(product), isLarge: true),
           ],
         ),
